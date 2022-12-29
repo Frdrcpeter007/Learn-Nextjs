@@ -1,8 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Author from './_child/Author';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, {Autoplay} from 'swiper'
+import 'swiper/css';
 
 const SectionA = () => {
+
+    SwiperCore.use([Autoplay])
+
     const bg = {
         background: "url('/images/banner.png') no-repeat",
         backgroundPosition: "right",
@@ -10,9 +16,20 @@ const SectionA = () => {
     return (
         <section className="py-16" style={bg}>
             <div className="container mx-auto md:px-20">
-                <h1 className="font-semibold text-4xl text-center pb-12">Trending</h1>  
-
-                {slide()}        
+                <h1 className="title">Trending</h1>
+                <Swiper
+                    slidesPerView={1}
+                    loop={true}
+                    autoplay={{
+                        delay: 4000
+                    }}
+                >
+                    <SwiperSlide>{slide("/images/img1.jpg")}</SwiperSlide>
+                    <SwiperSlide>{slide("/images/img2.jpg")}</SwiperSlide>
+                    <SwiperSlide>{slide("/images/img3.png")}</SwiperSlide>
+                    <SwiperSlide>{slide("/images/img4.png")}</SwiperSlide>
+                </Swiper>
+                
             </div>
         </section>
     );
@@ -20,12 +37,12 @@ const SectionA = () => {
 
 export default SectionA;
 
-function slide() {
+function slide(img) {
     return (
         <div className="grid md:grid-cols-2 gap-10">
             <div className="image">
                 <Link href={"/"} passHref>
-                    <Image src={"/images/img1.jpg"} width={600} height={600} />
+                    <Image src={img} width={600} height={600} />
                 </Link>
             </div>
 
@@ -40,7 +57,7 @@ function slide() {
 
                 </div>
 
-                <div className="title">
+                <div className="">
                     <Link href={"/"} legacyBehavior>
                         <a className='text-3xl md:text-5xl font-bold text-gray-800 hover:text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</a>
                     </Link>
