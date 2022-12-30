@@ -6,7 +6,7 @@ import Author from "./_child/Author";
 
 const SectionC = () => {
     return (
-        <section className="container mx-auto md:px-20 py10">
+        <section className="container mx-auto md:px-20 py-10">
             <h1 className="title">Most Popular</h1>
 
             <Swiper
