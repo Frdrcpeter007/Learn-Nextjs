@@ -1,19 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
+import Fetcher from "../lib/fetcher";
+import getPost from "../lib/helper";
 import Author from "./_child/Author";
 
 const SectionB = () => {
+    const {data, isLoading, isError} = Fetcher('/articles');
+    
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>failed to load</div>
+
     return (
         <section className="container mx-auto md:px-20 py-10">
             <h1 className="title">Latest Post</h1>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
-                {Post("/images/articles/posts/img1.jpg")}
-                {Post("/images/articles/posts/img2.png")}
-                {Post("/images/articles/posts/img3.png")}
-                {Post("/images/articles/posts/img4.png")}
-                {Post("/images/articles/posts/img5.png")}
-                {Post("/images/articles/posts/img6.png")}
+               {
+                    data.map((post, index) => (
+                        <Post data={post} key={index} />
+                    ))
+               }
             </div>
         </section>
     );
@@ -21,7 +27,10 @@ const SectionB = () => {
 
 export default SectionB;
 
-function Post(img) {
+function Post({data}) {
+
+    const {title, subtitle, img, category, author, published} = data
+
     return (
         <div className="item">
             <div className="images">
@@ -33,25 +42,25 @@ function Post(img) {
             <div className="info flex justify-center flex-col py-4">
                 <div className="cat flex gap-2">
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-orange-600 hover:text-orange-800'>Business, Travel</a>
+                        <a className='text-orange-600 hover:text-orange-800'>{category}</a>
                     </Link>
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-gray-800 hover:text-gray-600'>Juillet 2022</a>
+                        <a className='text-gray-800 hover:text-gray-600'>{published}</a>
                     </Link>
 
                 </div>
 
                 <div className="">
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-lg md:text-xl font-bold text-gray-800 hover:text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</a>
+                        <a className='text-lg md:text-xl font-bold text-gray-800 hover:text-gray-600'>{title}</a>
                     </Link>
                 </div>
 
                 <p className='py-3 text-gray-500 text-xs'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis nostrum perspiciatis tempora cumque velit enim! Error labore perspiciatis recusandae at fuga! Eius pariatur accusamus aperiam quisquam, neque eaque maxime sunt!
+                    {subtitle}
                 </p>
 
-                <Author />
+                {author ? <Author data={data.author}/> : <></>}
             </div>
         </div>
     )
