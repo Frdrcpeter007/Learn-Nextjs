@@ -81,7 +81,7 @@ function Slide({data}) {
                     {subtitle}
                 </p>
 
-                {author ? <Author data={author}/> : <></>}
+                {author ? <Author {...author}/> : <></>}
                 
             </div>
         </div>

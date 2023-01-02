@@ -1,16 +1,42 @@
 import Image from "next/image";
 import Layout from "../../components/Layout";
 import Author from "../../components/_child/Author";
+import Error from "../../components/_child/Error";
 import Related from "../../components/_child/Related";
+import Spinner from "../../components/_child/Spinner";
+import Fetcher from "../../lib/fetcher";
 import getPost from "../../lib/helper";
+import {useRouter} from "next/router";
+import { SWRConfig } from "swr";
 
-const Page = ({ title, subtitle, img, category, author, published}) => {
+const Page = ({fallback}) => {
+
+    const router = useRouter();
+
+    const {id} = router.query;
+    const {data, isLoading, isError} = Fetcher(`/articles/${id}`);
+
+    if (isLoading) return <Spinner />;
+    if (isError) return <Error text={"Something Went Wrong..."}/>;
+    if (!data || data.length == 0) return <Error text={"Article not found"}/>;
+    return (
+        <SWRConfig
+            value={
+                {fallback}
+            }
+        >
+            <Article {...data}/>
+        </SWRConfig>
+    )
+}
+
+const Article = ({ title, subtitle, img, category, author, published}) => {
 
     return (
         <Layout>
             <section className="container mx-auto py-12 md:px-2 w-1/2">
                 <div className="flex justify-center">
-                    {author ? <Author data={author}/> : <></>}
+                    {author ? <Author {...author} /> : <></>}
                 </div>
 
                 <div className="py-10">
@@ -51,11 +77,15 @@ const Page = ({ title, subtitle, img, category, author, published}) => {
 export default Page;
 
 export async function getStaticProps({params}) {
-    
+
     const post = await getPost('/articles', params.id);
 
     return {
-        props: post
+        props: {
+            fallback: {
+                '/api/articles': post
+            }
+        }
     }
 }
 

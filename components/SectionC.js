@@ -19,8 +19,12 @@ const SectionC = () => {
             <h1 className="title">Most Popular</h1>
 
             <Swiper
-                slidesPerView={2}
-                spaceBetween={50}
+                breakpoints= {{
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 30
+                    }
+                }}
             >
                 {
                     data.map((item, index) => (
@@ -68,7 +72,7 @@ function Post({data}) {
                     {subtitle}
                 </p>
 
-                <Author />
+                {author ? <Author {...author} /> : <></>}
             </div>
         </div>
     )
