@@ -3,8 +3,17 @@ import 'swiper/css';
 import Link from "next/link";
 import Image from "next/image";
 import Author from "./_child/Author";
+import Spinner from './_child/Spinner';
+import Error from './_child/Error';
+import Fetcher from '../lib/fetcher';
 
 const SectionC = () => {
+    const {data, isLoading, isError} = Fetcher('/articles/popular');
+    
+    if (isLoading) return <Spinner />;
+    if (isError) return <Error text={"Something Went Wrong..."}/>;
+    if (!data || data.length == 0) return <Error text={"Empty datas"}/>;
+
     return (
         <section className="container mx-auto md:px-20 py-10">
             <h1 className="title">Most Popular</h1>
@@ -13,12 +22,12 @@ const SectionC = () => {
                 slidesPerView={2}
                 spaceBetween={50}
             >
-                <SwiperSlide>{Post("/images/articles/posts/img1.jpg")}</SwiperSlide>
-                <SwiperSlide>{Post("/images/articles/posts/img6.png")}</SwiperSlide>
-                <SwiperSlide>{Post("/images/articles/posts/img4.png")}</SwiperSlide>
-                <SwiperSlide>{Post("/images/articles/posts/img2.png")}</SwiperSlide>
-                <SwiperSlide>{Post("/images/articles/posts/img5.png")}</SwiperSlide>
-                <SwiperSlide>{Post("/images/articles/posts/img3.png")}</SwiperSlide>
+                {
+                    data.map((item, index) => (
+
+                        <SwiperSlide><Post data={item} /></SwiperSlide>
+                    ))
+                }
             </Swiper>
         </section>
     );
@@ -26,7 +35,10 @@ const SectionC = () => {
 
 export default SectionC;
 
-function Post(img) {
+function Post({data}) {
+    
+    const {title, subtitle, img, category, author, published} = data
+
     return (
         <div className="item">
             <div className="images">
@@ -38,22 +50,22 @@ function Post(img) {
             <div className="info flex justify-center flex-col py-4">
                 <div className="cat flex gap-2">
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-orange-600 hover:text-orange-800'>Business, Travel</a>
+                        <a className='text-orange-600 hover:text-orange-800'>{category}</a>
                     </Link>
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-gray-800 hover:text-gray-600'>Juillet 2022</a>
+                        <a className='text-gray-800 hover:text-gray-600'>{published}</a>
                     </Link>
 
                 </div>
 
                 <div className="">
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-xl md:text-2xl font-bold text-gray-800 hover:text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</a>
+                        <a className='text-xl md:text-2xl font-bold text-gray-800 hover:text-gray-600'>{title}</a>
                     </Link>
                 </div>
 
                 <p className='py-3 text-gray-500 text-xs'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis nostrum perspiciatis tempora cumque velit enim! Error labore perspiciatis recusandae at fuga! Eius pariatur accusamus aperiam quisquam, neque eaque maxime sunt!
+                    {subtitle}
                 </p>
 
                 <Author />

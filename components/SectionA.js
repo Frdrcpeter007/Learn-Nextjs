@@ -4,6 +4,9 @@ import Author from './_child/Author';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, {Autoplay} from 'swiper'
 import 'swiper/css';
+import Spinner from './_child/Spinner';
+import Error from './_child/Error';
+import Fetcher from '../lib/fetcher';
 
 const SectionA = () => {
 
@@ -13,6 +16,13 @@ const SectionA = () => {
         background: "url('/images/banner.png') no-repeat",
         backgroundPosition: "right",
     }
+
+    const {data, isLoading, isError} = Fetcher('/articles/trending');
+    
+    if (isLoading) return <Spinner />;
+    if (isError) return <Error text={"Something Went Wrong..."}/>;
+    if (!data || data.length == 0) return <Error text={"Empty datas"}/>;
+
     return (
         <section className="py-16" style={bg}>
             <div className="container mx-auto md:px-20">
@@ -24,10 +34,11 @@ const SectionA = () => {
                         delay: 4000
                     }}
                 >
-                    <SwiperSlide>{slide("/images/img1.jpg")}</SwiperSlide>
-                    <SwiperSlide>{slide("/images/img2.jpg")}</SwiperSlide>
-                    <SwiperSlide>{slide("/images/img3.png")}</SwiperSlide>
-                    <SwiperSlide>{slide("/images/img4.png")}</SwiperSlide>
+                    {data.map((item, index) => (
+
+                        <SwiperSlide key={index}><Slide data={item} /></SwiperSlide>
+                    ))}
+                    
                 </Swiper>
                 
             </div>
@@ -37,7 +48,10 @@ const SectionA = () => {
 
 export default SectionA;
 
-function slide(img) {
+function Slide(data) {
+
+    const {title, subtitle, img, category, author, published} = data
+
     return (
         <div className="grid md:grid-cols-2 gap-10">
             <div className="image">
@@ -49,25 +63,26 @@ function slide(img) {
             <div className="info flex justify-center flex-col">
                 <div className="cat flex gap-2">
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-orange-600 hover:text-orange-800'>Business, Travel</a>
+                        <a className='text-orange-600 hover:text-orange-800'>{category}</a>
                     </Link>
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-gray-800 hover:text-gray-600'>Juillet 2022</a>
+                        <a className='text-gray-800 hover:text-gray-600'>{published}</a>
                     </Link>
 
                 </div>
 
                 <div className="">
                     <Link href={"/"} legacyBehavior>
-                        <a className='text-3xl md:text-5xl font-bold text-gray-800 hover:text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</a>
+                        <a className='text-3xl md:text-5xl font-bold text-gray-800 hover:text-gray-600'>{title}</a>
                     </Link>
                 </div>
 
                 <p className='py-3 text-gray-500'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis nostrum perspiciatis tempora cumque velit enim! Error labore perspiciatis recusandae at fuga! Eius pariatur accusamus aperiam quisquam, neque eaque maxime sunt!
+                    {subtitle}
                 </p>
 
-                <Author />
+                {author ? <Author data={author}/> : <></>}
+                
             </div>
         </div>
     )

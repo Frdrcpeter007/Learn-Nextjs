@@ -63,7 +63,7 @@ function Post({data}) {
                     {subtitle}
                 </p>
 
-                {author ? <Author data={data.author}/> : <></>}
+                {author ? <Author data={author}/> : <></>}
             </div>
         </div>
     )
