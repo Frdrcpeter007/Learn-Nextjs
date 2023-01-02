@@ -2,24 +2,26 @@ import Image from "next/image";
 import Layout from "../../components/Layout";
 import Author from "../../components/_child/Author";
 import Related from "../../components/_child/Related";
+import getPost from "../../lib/helper";
 
-const Page = () => {
+const Page = ({ title, subtitle, img, category, author, published}) => {
+
     return (
         <Layout>
             <section className="container mx-auto py-12 md:px-2 w-1/2">
                 <div className="flex justify-center">
-                    <Author />
+                    {author ? <Author data={author}/> : <></>}
                 </div>
 
                 <div className="py-10">
-                    <h1 className="title pb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, impedit!</h1>
+                    <h1 className="title pb-5">{title}</h1>
                     <p className="text-gray-500 text-xl text-center">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo at labore enim maiores aperiam dolores fugiat pariatur rerum, repudiandae cumque inventore, accusamus, libero neque?
+                        {subtitle}
                     </p>
 
                     <div className="py-10">
                         <Image 
-                            src={"/images/img1.jpg"}
+                            src={img}
                             width={900}
                             height={600}
                             className="rounded-3xl"
@@ -47,3 +49,27 @@ const Page = () => {
 }
 
 export default Page;
+
+export async function getStaticProps({params}) {
+    
+    const post = await getPost('/articles', params.id);
+
+    return {
+        props: post
+    }
+}
+
+export async function getStaticPaths() {
+    const posts = await getPost('/articles');
+
+    return {
+        paths: posts.map(post => {
+            return {
+                params: {
+                    id: post.id.toString()
+                }
+            }
+        }),
+        fallback: false
+    }
+}

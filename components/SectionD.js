@@ -43,12 +43,12 @@ export default SectionD;
 
 function Post({data}) {
 
-    const {title, subtitle, img, category, author, published} = data
+    const {id, title, subtitle, img, category, author, published} = data
 
     return (
         <div className="flex gap-5">
             <div className="image flex flex-col justify-start">
-                <Link href={"/"} passHref>
+                <Link href={"/posts/" + id} passHref>
                     <Image src={img} width={300} height={250} className="rounded" />
                 </Link>
             </div>
@@ -65,7 +65,7 @@ function Post({data}) {
                 </div>
 
                 <div className="">
-                    <Link href={"/"} legacyBehavior>
+                    <Link href={"/posts/" + id} legacyBehavior>
                         <a className='text-sm md:text-md font-bold text-gray-800 hover:text-gray-600'>{title}</a>
                     </Link>
                 </div>

@@ -48,14 +48,14 @@ const SectionA = () => {
 
 export default SectionA;
 
-function Slide(data) {
+function Slide({data}) {
 
-    const {title, subtitle, img, category, author, published} = data
+    const {id, title, subtitle, img, category, author, published} = data
 
     return (
         <div className="grid md:grid-cols-2 gap-10">
             <div className="image">
-                <Link href={"/"} passHref>
+                <Link href={"/posts/" + id} passHref>
                     <Image src={img} width={600} height={600} />
                 </Link>
             </div>
@@ -72,7 +72,7 @@ function Slide(data) {
                 </div>
 
                 <div className="">
-                    <Link href={"/"} legacyBehavior>
+                    <Link href={"/posts/" + id} legacyBehavior>
                         <a className='text-3xl md:text-5xl font-bold text-gray-800 hover:text-gray-600'>{title}</a>
                     </Link>
                 </div>

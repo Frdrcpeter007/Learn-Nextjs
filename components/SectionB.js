@@ -32,12 +32,12 @@ export default SectionB;
 
 function Post({data}) {
 
-    const {title, subtitle, img, category, author, published} = data
+    const {id, title, subtitle, img, category, author, published} = data
 
     return (
         <div className="item">
             <div className="images">
-                <Link href={"/"} passHref>
+                <Link href={"/posts/" + id} passHref>
                     <Image src={img} width={500} height={350} className="rounded-xl" />
                 </Link>
             </div>
@@ -54,7 +54,7 @@ function Post({data}) {
                 </div>
 
                 <div className="">
-                    <Link href={"/"} legacyBehavior>
+                    <Link href={"/posts/" + id} legacyBehavior>
                         <a className='text-lg md:text-xl font-bold text-gray-800 hover:text-gray-600'>{title}</a>
                     </Link>
                 </div>
