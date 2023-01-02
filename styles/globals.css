@@ -16,3 +16,18 @@
 .title {
   @apply font-bold text-4xl py-12 text-center
 }
+
+.loader {
+  @apply bg-gray-200 rounded-full border-4 ease-linear h-10 w-10 bg-transparent;
+  border-top-color: #363ce0;
+  animation: spinner 1.2s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg); 
+  }
+  100% {
+    transform: rotate(360deg); 
+  }
+}

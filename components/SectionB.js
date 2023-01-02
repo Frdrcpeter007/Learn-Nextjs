@@ -3,12 +3,15 @@ import Link from "next/link";
 import Fetcher from "../lib/fetcher";
 import getPost from "../lib/helper";
 import Author from "./_child/Author";
+import Error from "./_child/Error";
+import Spinner from "./_child/Spinner";
 
 const SectionB = () => {
     const {data, isLoading, isError} = Fetcher('/articles');
     
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>failed to load</div>
+    if (isLoading) return <Spinner />;
+    if (isError) return <Error text={"Something Went Wrong..."}/>;
+    if (!data || data.length == 0) return <Error text={"Empty datas"}/>;
 
     return (
         <section className="container mx-auto md:px-20 py-10">
